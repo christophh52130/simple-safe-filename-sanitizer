@@ -18,3 +18,10 @@ The function sanitizes a **basename only**. Forward and back slashes in the inpu
 ## Edge cases
 
 Windows reserves names like `CON`, `PRN`, `AUX`, `NUL`, and `COM1`–`COM9` regardless of extension. The library prefixes these exact tokens with an underscore (`CON` → `_CON`) but does **not** treat `CON.txt` as reserved, because the reserved-word check applies to the whole name. This is the one interpretation worth stating plainly: if your input is `CON.txt`, it survives unchanged.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
